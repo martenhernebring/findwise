@@ -8,9 +8,11 @@ public class SearchApplication {
 
   public static void main(String[] args) {
     if(args != null && args.length < 1) {
-      throw new IllegalArgumentException("Args must not be empty");
+      System.err.println("Usage: java -jar target/search-0.0.1-SNAPSHOT.jar " +
+          "\"doc1\" \"doc2\" ...");
+    } else {
+      SpringApplication.run(SearchApplication.class, args);
     }
-    SpringApplication.run(SearchApplication.class, args);
   }
 
 }
