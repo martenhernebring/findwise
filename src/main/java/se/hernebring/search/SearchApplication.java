@@ -10,15 +10,18 @@ public class SearchApplication {
     "target/search-0.0.1-SNAPSHOT.jar \"doc1\" \"doc2\" ...";
 
   public static void main(String[] args) {
-    if(args != null) {
-      verify(args);
+    try {
+      if (args != null)
+        verifyInput(args);
+      SpringApplication.run(SearchApplication.class, args);
+    } catch (IllegalArgumentException ex) {
+      System.err.println(ex.getMessage());
     }
-    SpringApplication.run(SearchApplication.class, args);
   }
 
-  private static void verify(String[] args) {
+  private static void verifyInput(String[] args) {
     if(args.length < 1)
-      System.err.println(INSTRUCTIONS);
+      throw new IllegalArgumentException(INSTRUCTIONS);
     else {
       mustContainTwoTexts(args);
     }
@@ -36,8 +39,8 @@ public class SearchApplication {
         break;
     }
     if(!second) {
-        System.err.println(INSTRUCTIONS +
-          " (must contain several non-white documents)");
+      throw new IllegalArgumentException(INSTRUCTIONS +
+        " (must contain several non-white documents)");
     }
   }
 

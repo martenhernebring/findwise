@@ -29,9 +29,8 @@ class SearchApplicationTests {
 
   @Test
   void nullArgumentIsIllegal() {
-    var ex = assertThrows(IllegalArgumentException.class,
-      () -> SearchApplication.main(null));
-    assertEquals("Args must not be null", ex.getMessage());
+    SearchApplication.main(null);
+    assertEquals("Args must not be null", captor.toString().trim());
   }
 
   @Test
