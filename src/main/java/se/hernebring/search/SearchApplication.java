@@ -1,47 +1,33 @@
 package se.hernebring.search;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import se.hernebring.search.service.SearchService;
 
 @SpringBootApplication
-public class SearchApplication {
+public class SearchApplication implements CommandLineRunner {
 
-  private static final String INSTRUCTIONS = "Usage: java -jar " +
-    "target/search-0.0.1-SNAPSHOT.jar \"doc1\" \"doc2\" ...";
+  final SearchService service;
+
+  public SearchApplication(SearchService service) {
+    this.service = service;
+  }
 
   public static void main(String[] args) {
+    SpringApplication.run(SearchApplication.class, args);
+  }
+
+  @Override
+  public void run(String... args) throws Exception {
     try {
-      if (args != null)
-        verifyInput(args);
-      SpringApplication.run(SearchApplication.class, args);
+      Argument.verify(args);
+      service.index(args);
+      boolean continueRunning = true;
+      while (continueRunning)
+        continueRunning = service.searchForQuery();
     } catch (IllegalArgumentException ex) {
       System.err.println(ex.getMessage());
     }
   }
-
-  private static void verifyInput(String[] args) {
-    if(args.length < 1)
-      throw new IllegalArgumentException(INSTRUCTIONS);
-    else {
-      mustContainTwoTexts(args);
-    }
-  }
-
-  private static void mustContainTwoTexts(String[] args) {
-    boolean first = true;
-    boolean second = false;
-    for(String arg: args) {
-      if(first) {
-        first = arg.isBlank();
-      } else if (!second) {
-        second = !arg.isBlank();
-      } else
-        break;
-    }
-    if(!second) {
-      throw new IllegalArgumentException(INSTRUCTIONS +
-        " (must contain several non-white documents)");
-    }
-  }
-
 }
