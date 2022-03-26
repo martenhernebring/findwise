@@ -19,7 +19,7 @@ public class SearchApplication implements CommandLineRunner {
   }
 
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) {
     try {
       Argument.verify(args);
       service.index(args);

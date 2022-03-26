@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class SearchPrompter implements QueryRepository {
 
   private Scanner scanner;
-  private PrintStream out;
+  private final PrintStream out;
 
   public SearchPrompter() {
     scanner = new Scanner(System.in);

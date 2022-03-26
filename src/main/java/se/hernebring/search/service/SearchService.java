@@ -5,6 +5,7 @@ import se.hernebring.search.repository.DocumentRepository;
 import se.hernebring.search.repository.QueryRepository;
 
 import java.util.List;
+import java.util.TreeMap;
 
 @Service
 public class SearchService {
@@ -26,7 +27,7 @@ public class SearchService {
     if(query.isEmpty()) {
       return false;
     }
-    List<String> result = documentRepository.search(query);
+    TreeMap<Double, String> result = documentRepository.search(query);
     System.out.println(result);
     return true;
   }

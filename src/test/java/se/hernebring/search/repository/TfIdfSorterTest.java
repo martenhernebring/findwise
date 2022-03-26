@@ -5,12 +5,13 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TfIdfSorterTest {
 
-  private DocumentRepository repository = new TfIdfSorter();
+  private final DocumentRepository repository = new TfIdfSorter();
 
   @Test
   void searchForBrownShouldReturnDocument1And2() {
@@ -18,10 +19,10 @@ public class TfIdfSorterTest {
       "the lazy brown dog sat in the corner",
       "the red fox bit the lazy dog"};
     repository.index(documents);
-    List<String> actualList = repository.search("brown");
-    List<String> expectedList = new ArrayList<>();
-    expectedList.add("the brown fox jumped over the brown dog");
-    expectedList.add("the lazy brown dog sat in the corner");
+    TreeMap<Double, String> actualList = repository.search("brown");
+    TreeMap<Double, String> expectedList = new TreeMap<>();
+    expectedList.put(0.11005703690980077, "the brown fox jumped over the brown dog");
+    expectedList.put(0.0990513332188207, "the lazy brown dog sat in the corner");
     assertEquals(expectedList, actualList);
   }
 
@@ -31,10 +32,14 @@ public class TfIdfSorterTest {
       "the lazy brown dog sat in the corner",
       "the red fox bit the lazy dog"};
     repository.index(documents);
-    List<String> actualList = repository.search("brown");
-    List<String> expectedList = new ArrayList<>();
-    expectedList.add("the red fox bit the lazy dog");
-    expectedList.add("the brown fox jumped over the brown dog");
+    TreeMap<Double, String> actualList = repository.search("fox");
+    TreeMap<Double, String> expectedList = new TreeMap<>();
+    expectedList.put(0.0990513332188207, "the brown fox jumped over the brown dog");
+    expectedList.put(0.10062357660324642, "the red fox bit the lazy dog");
+//    TreeMap<Double, String> actualList = repository.search("brown");
+//    TreeMap<Double, String> expectedList = new TreeMap<>();
+//    expectedList.put(0.11005703690980077, "the brown fox jumped over the brown dog");
+//    expectedList.put(0.0990513332188207, "the lazy brown dog sat in the corner");
     assertEquals(expectedList, actualList);
   }
 }

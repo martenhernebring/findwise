@@ -1,8 +1,8 @@
 package se.hernebring.search.repository;
 
-import java.util.List;
+import java.util.TreeMap;
 
 public interface DocumentRepository {
   void index(String[] args);
-  List<String> search(String query);
+  TreeMap<Double, String> search(String query);
 }
