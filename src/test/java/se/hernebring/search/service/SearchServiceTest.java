@@ -45,7 +45,7 @@ public class SearchServiceTest {
   void userRequestShutdownSimulation() {
     when(mockedSearchRepository.prompt(any(String.class))).thenReturn("");
     assertThrows(ShutdownRequestedException.class,
-      () -> searchServiceTest.searchUntilShutdown());
+      () -> searchServiceTest.searchOrShutdown());
   }
 
   @Test
@@ -58,7 +58,7 @@ public class SearchServiceTest {
     reverseMap.put(0.04402281476392031, expected.get(0));
     reverseMap.put(0.022011407381960155, expected.get(1));
     when(mockedDocumentRepository.search("brown")).thenReturn(reverseMap);
-    var result = searchServiceTest.searchUntilShutdown();
+    var result = searchServiceTest.searchOrShutdown();
     assertEquals(expected, result);
   }
 
@@ -72,7 +72,7 @@ public class SearchServiceTest {
     reverseMap.put(0.025155894150811604, expected.get(0));
     reverseMap.put(0.022011407381960155, expected.get(1));
     when(mockedDocumentRepository.search("fox")).thenReturn(reverseMap);
-    var result = searchServiceTest.searchUntilShutdown();
+    var result = searchServiceTest.searchOrShutdown();
     assertEquals(expected, result);
   }
 }

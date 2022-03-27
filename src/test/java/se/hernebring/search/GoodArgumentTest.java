@@ -33,7 +33,7 @@ class GoodArgumentTest {
     multipleNonBlank[0] = "the brown fox jumped over the brown dog";
     multipleNonBlank[1] = "the lazy brown dog sat in the corner";
     doNothing().when(mockedSearchService).index(any());
-    when(mockedSearchService.searchUntilShutdown()).thenThrow(new ShutdownRequestedException("Test"));
+    when(mockedSearchService.searchOrShutdown()).thenThrow(new ShutdownRequestedException("Test"));
     searchApplicationTest.run(multipleNonBlank);
     assertEquals("Thanks for using our Searching App. See you again!", captor.toString().trim());
     System.setOut(standardOut);

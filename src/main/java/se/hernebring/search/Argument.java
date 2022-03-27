@@ -6,29 +6,27 @@ public class Argument {
     "target/search-0.0.1-SNAPSHOT.jar \"doc1\" \"doc2\" ...";
 
   public static final String MULTIPLE =
-    " (must contain several non-white documents)";
+    " (must contain several documents containing non-white space)";
 
   public static void verify(String[] args) {
     if(args == null || args.length < 1)
       throw new IllegalArgumentException(USAGE);
-    else {
+    else
       mustContainTwoTexts(args);
-    }
   }
 
   private static void mustContainTwoTexts(String[] args) {
     boolean first = true;
     boolean second = false;
     for(String arg: args) {
-      if(first) {
+      if (first)
         first = arg.isBlank();
-      } else if (!second) {
+      else if (!second)
         second = !arg.isBlank();
-      } else
+      else
         break;
     }
-    if(!second) {
+    if(!second)
       throw new IllegalArgumentException(USAGE + MULTIPLE);
-    }
   }
 }

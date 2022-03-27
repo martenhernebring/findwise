@@ -25,7 +25,7 @@ public class SearchApplication implements CommandLineRunner {
       Argument.verify(args);
       service.index(args);
       while (true)
-        service.searchUntilShutdown().forEach(System.out::println);
+        service.searchOrShutdown().forEach(System.out::println);
     } catch (IllegalArgumentException ex) {
       System.err.println(ex.getMessage());
     } catch (ShutdownRequestedException ex) {

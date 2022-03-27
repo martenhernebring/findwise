@@ -14,19 +14,20 @@ public class SearchService {
   final DocumentRepository documentRepository;
   final QueryRepository queryRepository;
 
-  public SearchService(DocumentRepository documentRepository, QueryRepository queryRepository) {
-    this.documentRepository = documentRepository;
-    this.queryRepository = queryRepository;
+  public SearchService(DocumentRepository docRep, QueryRepository queryRep) {
+    this.documentRepository = docRep;
+    this.queryRepository = queryRep;
   }
 
   public void index(String[] args) {
     documentRepository.index(args);
   }
 
-  public List<String> searchUntilShutdown() {
-    String query = queryRepository.prompt("Type word and hit enter to search (empty to quit)");
+  public List<String> searchOrShutdown() {
+    String query = queryRepository
+      .prompt("Type word and hit enter to search (empty to quit)");
     if(query.isEmpty())
-      throw new ShutdownRequestedException("User request quit by empty search");
+      throw new ShutdownRequestedException("Empty search: Quit requested");
     return new ArrayList<>(documentRepository.search(query).values());
   }
 }

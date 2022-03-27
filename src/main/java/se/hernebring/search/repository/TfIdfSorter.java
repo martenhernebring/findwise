@@ -11,45 +11,63 @@ public class TfIdfSorter implements DocumentRepository {
   final List<HashMap<String, Double>> invertedIndexList = new ArrayList<>();
 
   @Override
-  public void index(String[] args) {
-    documents = args;
-    HashMap<String, Integer> containTerm = new HashMap<>();
-    for (String arg : args) {
-      String[] words = arg.split(" ");
-      HashMap<String, Integer> rawCount = new HashMap<>();
-      for (String word : words) {
-        if (rawCount.containsKey(word)) {
-          int count = rawCount.get(word) + 1;
-          rawCount.put(word, count);
-        }
-        else {
-          rawCount.put(word, 1);
-          if(containTerm.containsKey(word))
-            containTerm.put(word, containTerm.get(word) + 1);
-          else
-            containTerm.put(word, 1);
-        }
-      }
-      HashMap<String, Double> termFrequency = new HashMap<>();
-      for(var entry : rawCount.entrySet()) {
-        termFrequency.put(entry.getKey(), (double) entry.getValue() / words.length);
-      }
-      invertedIndexList.add(termFrequency);
-    }
-    double N = documents.length;
-    for(HashMap<String, Double> ii : invertedIndexList)
-      ii.replaceAll((k, v) -> v * Math.log10(N / containTerm.get(k)));
-  }
-
-  @Override
   public TreeMap<Double, String> search(String query) {
     TreeMap<Double, String> result = new TreeMap<>(Collections.reverseOrder());
     for(int i = 0; i < documents.length; i++) {
       HashMap<String, Double> current = invertedIndexList.get(i);
-      if(current.containsKey(query))
-        result.put(current.get(query), documents[i]);
+      if(current.containsKey(query)) {
+        if(result.containsKey(current.get(query))) {
+          result.put(current.get(query) - 0.000000000000000001, documents[i]);
+        } else {
+          result.put(current.get(query), documents[i]);
+        }
+      }
     }
-    System.out.println(result);
     return result;
+  }
+
+  @Override
+  public void index(String[] args) {
+    documents = args;
+    HashMap<String, Integer> termDocsCount = calculateAllTermFrequencies();
+    weighInverseDocumentFrequency(termDocsCount);
+  }
+
+  private void weighInverseDocumentFrequency(HashMap<String, Integer> docsNo) {
+    double N = documents.length;
+    for(HashMap<String, Double> ii : invertedIndexList)
+      ii.replaceAll((k, v) -> v * Math.log10(N / docsNo.get(k)));
+  }
+
+  private HashMap<String, Integer> calculateAllTermFrequencies() {
+    HashMap<String, Integer> termDocsCount = new HashMap<>();
+    for (String document : documents)
+      calculateTermFrequency(document, termDocsCount);
+    return termDocsCount;
+  }
+
+  private void calculateTermFrequency(String document,
+                                      HashMap<String, Integer> docsWith) {
+    String[] words = document.split(" ");
+    HashMap<String, Integer> rawCount = new HashMap<>();
+    for (String word : words)
+      countOccurrences(word, docsWith, rawCount);
+    HashMap<String, Double> termFrequency = new HashMap<>();
+    for(var es : rawCount.entrySet())
+      termFrequency.put(es.getKey(), (double) es.getValue() / words.length);
+    invertedIndexList.add(termFrequency);
+  }
+
+  private void countOccurrences(String word, HashMap<String, Integer> docsWith,
+                                HashMap<String, Integer> rawCount) {
+    if (rawCount.containsKey(word))
+      rawCount.put(word, rawCount.get(word) + 1);
+    else {
+      rawCount.put(word, 1);
+      if(docsWith.containsKey(word))
+        docsWith.put(word, docsWith.get(word) + 1);
+      else
+        docsWith.put(word, 1);
+    }
   }
 }
