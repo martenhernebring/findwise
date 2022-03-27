@@ -49,6 +49,7 @@ public class TfIdfSorter implements DocumentRepository {
       if(current.containsKey(query))
         result.put(current.get(query), documents[i]);
     }
+    System.out.println(result);
     return result;
   }
 }

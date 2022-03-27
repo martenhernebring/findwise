@@ -20,13 +20,12 @@ public class SearchApplication implements CommandLineRunner {
   }
 
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) {
     try {
       Argument.verify(args);
       service.index(args);
-      while (true) {
-        service.searchForQuery().forEach(System.out::println);
-      }
+      while (true)
+        service.searchUntilShutdown().forEach(System.out::println);
     } catch (IllegalArgumentException ex) {
       System.err.println(ex.getMessage());
     } catch (ShutdownRequestedException ex) {

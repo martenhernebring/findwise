@@ -5,9 +5,8 @@ import se.hernebring.search.exception.ShutdownRequestedException;
 import se.hernebring.search.repository.DocumentRepository;
 import se.hernebring.search.repository.QueryRepository;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
 @Service
 public class SearchService {
@@ -24,10 +23,10 @@ public class SearchService {
     documentRepository.index(args);
   }
 
-  public List<String> searchForQuery() {
+  public List<String> searchUntilShutdown() {
     String query = queryRepository.prompt("Type word and hit enter to search (empty to quit)");
     if(query.isEmpty())
       throw new ShutdownRequestedException("User request quit by empty search");
-    return (List<String>) documentRepository.search(query).values();
+    return new ArrayList<>(documentRepository.search(query).values());
   }
 }

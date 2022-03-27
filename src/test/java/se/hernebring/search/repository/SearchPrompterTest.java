@@ -1,6 +1,5 @@
 package se.hernebring.search.repository;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +21,6 @@ class SearchPrompterTest {
   SearchPrompter searchPrompterTest;
 
   @Test
-  @Disabled
   void prompt() {
     when(mockedScanner.nextLine()).thenReturn("");
     String result = searchPrompterTest.prompt("Test");
