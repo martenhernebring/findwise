@@ -1,10 +1,7 @@
 package se.hernebring.search.repository;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,8 +18,8 @@ public class TfIdfSorterTest {
     repository.index(documents);
     TreeMap<Double, String> actualList = repository.search("brown");
     TreeMap<Double, String> expectedList = new TreeMap<>();
-    expectedList.put(0.11005703690980077, "the brown fox jumped over the brown dog");
-    expectedList.put(0.0990513332188207, "the lazy brown dog sat in the corner");
+    expectedList.put(0.04402281476392031, "the brown fox jumped over the brown dog");
+    expectedList.put(0.022011407381960155, "the lazy brown dog sat in the corner");
     assertEquals(expectedList, actualList);
   }
 
@@ -34,12 +31,8 @@ public class TfIdfSorterTest {
     repository.index(documents);
     TreeMap<Double, String> actualList = repository.search("fox");
     TreeMap<Double, String> expectedList = new TreeMap<>();
-    expectedList.put(0.0990513332188207, "the brown fox jumped over the brown dog");
-    expectedList.put(0.10062357660324642, "the red fox bit the lazy dog");
-//    TreeMap<Double, String> actualList = repository.search("brown");
-//    TreeMap<Double, String> expectedList = new TreeMap<>();
-//    expectedList.put(0.11005703690980077, "the brown fox jumped over the brown dog");
-//    expectedList.put(0.0990513332188207, "the lazy brown dog sat in the corner");
+    expectedList.put(0.022011407381960155, "the brown fox jumped over the brown dog");
+    expectedList.put(0.025155894150811604, "the red fox bit the lazy dog");
     assertEquals(expectedList, actualList);
   }
 }

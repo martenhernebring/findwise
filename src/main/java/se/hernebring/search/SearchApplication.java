@@ -3,6 +3,7 @@ package se.hernebring.search;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import se.hernebring.search.exception.ShutdownRequestedException;
 import se.hernebring.search.service.SearchService;
 
 @SpringBootApplication
@@ -19,15 +20,17 @@ public class SearchApplication implements CommandLineRunner {
   }
 
   @Override
-  public void run(String... args) {
+  public void run(String... args) throws Exception {
     try {
       Argument.verify(args);
       service.index(args);
-      boolean continueRunning = true;
-      while (continueRunning)
-        continueRunning = service.searchForQuery();
+      while (true) {
+        service.searchForQuery().forEach(System.out::println);
+      }
     } catch (IllegalArgumentException ex) {
       System.err.println(ex.getMessage());
+    } catch (ShutdownRequestedException ex) {
+      System.out.println("Thanks for using our Searching App. See you again!");
     }
   }
 }

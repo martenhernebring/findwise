@@ -8,7 +8,7 @@ import java.util.Scanner;
 @Repository("search")
 public class SearchPrompter implements QueryRepository {
 
-  private Scanner scanner;
+  private final Scanner scanner;
   private final PrintStream out;
 
   public SearchPrompter() {

@@ -6,13 +6,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.hernebring.search.exception.ShutdownRequestedException;
 import se.hernebring.search.repository.SearchPrompter;
 import se.hernebring.search.repository.TfIdfSorter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -41,7 +42,8 @@ public class SearchServiceTest {
   @Test
   void userRequestShutdownSimulation() {
     when(mockedSearchRepository.prompt(any(String.class))).thenReturn("");
-    assertFalse(searchServiceTest.searchForQuery());
+    assertThrows(ShutdownRequestedException.class,
+      () -> searchServiceTest.searchForQuery());
   }
 
   @Test
