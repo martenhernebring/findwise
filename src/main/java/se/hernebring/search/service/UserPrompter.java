@@ -1,24 +1,23 @@
-package se.hernebring.search.repository;
+package se.hernebring.search.service;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.PrintStream;
 import java.util.Scanner;
 
-@Repository("search")
-public class SearchPrompter implements QueryRepository {
+@Service("prompter")
+public class UserPrompter {
 
   //mock test requires non-final
   private Scanner scanner;
   private final PrintStream out;
 
-  public SearchPrompter() {
+  public UserPrompter() {
     scanner = new Scanner(System.in);
     this.out = System.out;
   }
 
-
-  @Override
   public String prompt(String message) {
     out.println(message);
     return scanner.nextLine();

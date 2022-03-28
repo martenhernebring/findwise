@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.hernebring.search.exception.ShutdownRequestedException;
-import se.hernebring.search.service.SearchService;
+import se.hernebring.search.controller.SearchController;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -16,26 +16,26 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class GoodArgumentTest {
+class GoodArgAppTest {
 
   @Mock
-  private SearchService mockedSearchService;
+  private SearchController mockedSearchController;
 
   @InjectMocks
-  private SearchApplication searchApplicationTest;
+  private SearchApp searchAppTest;
 
   @Test
   void runSimulationWithGoodArgsAndUserRequestingShutdown() {
     final PrintStream standardOut = System.out;
     final ByteArrayOutputStream captor = new ByteArrayOutputStream();
     System.setOut(new PrintStream(captor));
-    String[] multipleNonBlank = new String[2];
-    multipleNonBlank[0] = "the brown fox jumped over the brown dog";
-    multipleNonBlank[1] = "the lazy brown dog sat in the corner";
-    doNothing().when(mockedSearchService).index(any());
-    when(mockedSearchService.searchOrShutdown()).thenThrow(new ShutdownRequestedException("Test"));
-    searchApplicationTest.run(multipleNonBlank);
-    assertEquals("Thanks for using our Searching App. See you again!", captor.toString().trim());
+    String[] defaultArgs = {"default"};
+    doNothing().when(mockedSearchController).index(any());
+    when(mockedSearchController.searchOrShutdown())
+      .thenThrow(new ShutdownRequestedException("Test"));
+    searchAppTest.run(defaultArgs);
+    assertEquals("Thanks for using our Searching App. See you again!",
+      captor.toString().trim());
     System.setOut(standardOut);
   }
 }

@@ -1,4 +1,4 @@
-package se.hernebring.search.repository;
+package se.hernebring.search.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,18 +12,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SearchPrompterTest {
+class UserPrompterTest {
 
   @Mock
   private Scanner mockedScanner;
 
   @InjectMocks
-  SearchPrompter searchPrompterTest;
+  UserPrompter userPrompterTest;
 
   @Test
   void prompt() {
     when(mockedScanner.nextLine()).thenReturn("");
-    String result = searchPrompterTest.prompt("Test");
+    String result = userPrompterTest.prompt("Test");
     assertEquals("", result);
   }
 }

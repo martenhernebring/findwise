@@ -1,8 +1,9 @@
 package se.hernebring.search.repository;
 
-import java.util.TreeMap;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import se.hernebring.search.model.Document;
 
-public interface DocumentRepository {
-  void index(String[] args);
-  TreeMap<Double, String> search(String query);
+@Repository("document")
+public interface DocumentRepository extends JpaRepository<Document, Long> {
 }

@@ -13,7 +13,7 @@ import java.io.PrintStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-@ContextConfiguration(classes = {SearchApplication.class, Argument.class, CommandLineRunner.class})
+@ContextConfiguration(classes = {SearchApp.class, Argument.class, CommandLineRunner.class})
 class BadArgumentTest {
 
   private final PrintStream standardErr = System.err;
@@ -32,7 +32,7 @@ class BadArgumentTest {
   @Test
   void emptyArgumentShouldPrintInstructions() {
     String[] empty = new String[0];
-    SearchApplication.main(empty);
+    SearchApp.main(empty);
     assertEquals(Argument.USAGE, captor.toString().trim());
   }
 
@@ -40,7 +40,7 @@ class BadArgumentTest {
   void oneDocumentOnlyShouldPrintInstructions() {
     String[] justOneDoc = new String[1];
     justOneDoc[0] = "the brown fox jumped over the brown dog";
-    SearchApplication.main(justOneDoc);
+    SearchApp.main(justOneDoc);
     assertEquals(Argument.USAGE + Argument.MULTIPLE, captor.toString().trim());
   }
 
@@ -49,7 +49,7 @@ class BadArgumentTest {
     String[] justOneNonWhite = new String[2];
     justOneNonWhite[0] = "the brown fox jumped over the brown dog";
     justOneNonWhite[1] = " ";
-    SearchApplication.main(justOneNonWhite);
+    SearchApp.main(justOneNonWhite);
     assertEquals(Argument.USAGE + Argument.MULTIPLE, captor.toString().trim());
   }
 

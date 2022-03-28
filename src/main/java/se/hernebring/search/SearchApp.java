@@ -3,29 +3,29 @@ package se.hernebring.search;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import se.hernebring.search.controller.SearchController;
 import se.hernebring.search.exception.ShutdownRequestedException;
-import se.hernebring.search.service.SearchService;
 
 @SpringBootApplication
-public class SearchApplication implements CommandLineRunner {
+public class SearchApp implements CommandLineRunner {
 
-  final SearchService service;
+  private final SearchController controller;
 
-  public SearchApplication(SearchService service) {
-    this.service = service;
+  public SearchApp(SearchController controller) {
+    this.controller = controller;
   }
 
   public static void main(String[] args) {
-    SpringApplication.run(SearchApplication.class, args);
+    SpringApplication.run(SearchApp.class, args);
   }
 
   @Override
   public void run(String... args) {
     try {
       Argument.verify(args);
-      service.index(args);
+      controller.index(args);
       while (true)
-        service.searchOrShutdown().forEach(System.out::println);
+        controller.searchOrShutdown().forEach(System.out::println);
     } catch (IllegalArgumentException ex) {
       System.err.println(ex.getMessage());
     } catch (ShutdownRequestedException ex) {
