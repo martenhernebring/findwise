@@ -17,4 +17,4 @@ b) Enter to quit the app.
 
 Requirements:
 * Maven
-* Java (probably 11+ maybe 8)
+* Java (language level 17, but probably 11+ and maybe 8 will work as well)

@@ -26,10 +26,10 @@ public class TfIdfEngine {
   private void addExistingAsUnique(String query, Document doc, TreeMap<Double, String> result) {
     Map<String, Double> current = doc.getTfIdf();
     if(current.containsKey(query)) {
-      if(result.containsKey(current.get(query)))
-        result.put(current.get(query) - 1.0E-18, doc.getText());
-      else
-        result.put(current.get(query), doc.getText());
+      double existing = current.get(query);
+      while(result.containsKey(existing))
+        existing -= 1.0E-18;
+      result.put(existing, doc.getText());
     }
   }
 }
