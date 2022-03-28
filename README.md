@@ -10,8 +10,10 @@ Author: Mårten Hernebring
 ###To run locally (development environment):
 1. Open terminal
 2. `mvn package`
-3a. `java -jar target/search-0.0.1-SNAPSHOT.jar default` for default values OR
-3b. `java -jar target/search-0.0.1-SNAPSHOT.jar "custom1" "custom2" ...` for custom
+3. a) `java -jar target/search-0.0.1-SNAPSHOT.jar default` for default values OR
+ b) `java -jar target/search-0.0.1-SNAPSHOT.jar "custom1" "custom2" ...` for custom
+4. a) `fox` to search for documents containing fox OR
+b) Enter to quit the app.
 
 Requirements:
 * Maven
