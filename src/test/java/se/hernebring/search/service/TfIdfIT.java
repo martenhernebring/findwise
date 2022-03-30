@@ -5,15 +5,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import se.hernebring.search.exception.IllegalQueryException;
+import se.hernebring.search.model.Term;
+import se.hernebring.search.repository.TermRepository;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
-import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TfIdfIT {
 
   @Autowired
@@ -22,27 +26,36 @@ public class TfIdfIT {
   @Autowired
   private TfIdfEngine engineTest;
 
+  @Autowired
+  private TermRepository termRepositoryTest;
+
   private String[] texts;
-  private TreeMap<Double, String> expected;
+  private List<String> expected;
 
   @BeforeEach
   void setUp() {
     texts = new String[]{"this is a a sample",
       "this is another another example example example"};
     sorterTest.index(texts);
-    expected = new TreeMap<>(Collections.reverseOrder());
+    expected = new ArrayList<>();
+  }
+
+  @Test
+  void searchForNonExistingWord() {
+    assertThrows(IllegalQueryException.class, () -> engineTest.search("qwe"));
   }
 
   @Test
   void searchForSameTfIdfValue() {
-    expected.put(-1.0E-18, texts[1]);
-    expected.put(0.0, texts[0]);
+    expected.add(texts[0]);
+    expected.add(texts[1]);
     assertEquals(expected, engineTest.search("this"));
   }
 
   @Test
   void wikipediaExample() {
-    Double exampleKey = engineTest.search("example").firstKey();
-    assertEquals("0.129", String.format(Locale.US, "%.3f", exampleKey));
+    Term term = termRepositoryTest.findByWord("example");
+    var exampleTfIdf = term.getDocumentTfIdf().keySet().iterator().next();
+    assertEquals("0.129", String.format(Locale.US, "%.3f", exampleTfIdf));
   }
 }

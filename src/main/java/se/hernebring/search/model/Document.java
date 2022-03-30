@@ -11,7 +11,7 @@ public class Document {
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  @Column(name = "id", nullable = false)
+  @Column(name = "id")
   private Long id;
   @Column(updatable = false)
   private String text;
@@ -20,6 +20,10 @@ public class Document {
 
   //for jpa
   public Document() {}
+
+  public Long getId() {
+    return id;
+  }
 
   public String getText() {
     return text;
@@ -36,4 +40,5 @@ public class Document {
   public void setTfIdf(Map<String, Double> tfIdf) {
     this.tfIdf = tfIdf;
   }
+
 }

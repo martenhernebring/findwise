@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ContextConfiguration(classes = {SearchApp.class, Argument.class, CommandLineRunner.class})
-class BadArgumentTest {
+class BadArgumentIT {
 
   private final PrintStream standardErr = System.err;
   private final ByteArrayOutputStream captor = new ByteArrayOutputStream();

@@ -24,8 +24,9 @@ public class SearchApp implements CommandLineRunner {
     try {
       Argument.verify(args);
       controller.index(args);
-      while (true)
+      while (true) {
         controller.searchOrShutdown().forEach(System.out::println);
+      }
     } catch (IllegalArgumentException ex) {
       System.err.println(ex.getMessage());
     } catch (ShutdownRequestedException ex) {

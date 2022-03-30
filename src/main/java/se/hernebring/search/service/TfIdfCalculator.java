@@ -2,33 +2,28 @@ package se.hernebring.search.service;
 
 import org.springframework.stereotype.Service;
 import se.hernebring.search.model.Document;
+import se.hernebring.search.model.Term;
 import se.hernebring.search.repository.DocumentRepository;
+import se.hernebring.search.repository.TermRepository;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TfIdfCalculator {
 
-  private final DocumentRepository repository;
+  private final DocumentRepository documentRepository;
+  private final TermRepository termRepository;
   private final HashMap<String, Integer> termDocsCount = new HashMap<>();
 
-  public TfIdfCalculator(DocumentRepository repository) {
-    this.repository = repository;
+  public TfIdfCalculator(DocumentRepository docRep, TermRepository termRep) {
+    this.documentRepository = docRep;
+    this.termRepository = termRep;
   }
 
   public void index(String[] args) {
     calculateTermFrequency(args);
     weighInverseDocumentFrequency(args.length);
-  }
-
-  private void weighInverseDocumentFrequency(int length) {
-    List<Document> documents = repository.findAll();
-    for(Document d : documents) {
-      d.getTfIdf().replaceAll((k, v) ->
-        v * Math.log10((double) length / termDocsCount.get(k)));
-    }
-    repository.saveAll(documents);
+    createInvertedIndex();
   }
 
   private void calculateTermFrequency(String[] args) {
@@ -42,12 +37,12 @@ public class TfIdfCalculator {
     for (String word : words)
       countOccurrences(word, rawCount);
     HashMap<String, Double> termFrequency = new HashMap<>();
-    for(var es : rawCount.entrySet())
-      termFrequency.put(es.getKey(), (double) es.getValue() / words.length);
+    for(var entry : rawCount.entrySet())
+      termFrequency.put(entry.getKey(), (double) entry.getValue() / words.length);
     Document document = new Document();
     document.setTfIdf(termFrequency);
     document.setText(text);
-    repository.save(document);
+    documentRepository.save(document);
   }
 
   private void countOccurrences(String word, HashMap<String, Integer> rawCount) {
@@ -60,5 +55,33 @@ public class TfIdfCalculator {
       else
         termDocsCount.put(word, 1);
     }
+  }
+
+  private void weighInverseDocumentFrequency(int length) {
+    List<Document> documents = documentRepository.findAll();
+    for(Document d : documents) {
+      d.getTfIdf().replaceAll((k, v) ->
+        v * Math.log10((double) length / termDocsCount.get(k)));
+      documentRepository.save(d);
+    }
+  }
+
+  private void createInvertedIndex() {
+    for(Document document : documentRepository.findAll()) {
+      Map<String, Double> tfIdf = document.getTfIdf();
+      for(var entry : tfIdf.entrySet())
+        saveTerm(document.getId(), entry);
+    }
+  }
+
+  private void saveTerm(Long id, Map.Entry<String, Double> entry) {
+    String word = entry.getKey();
+    Term term;
+    if(termRepository.existsByWord(word))
+      term = termRepository.findByWord(word);
+    else
+      term = new Term(word);
+    term.addDocumentTfIdf(id, entry.getValue());
+    termRepository.save(term);
   }
 }

@@ -1,10 +1,11 @@
 package se.hernebring.search.controller;
 
 import org.springframework.stereotype.Controller;
+import se.hernebring.search.exception.IllegalQueryException;
 import se.hernebring.search.exception.ShutdownRequestedException;
-import se.hernebring.search.service.UserPrompter;
-import se.hernebring.search.service.TfIdfEngine;
 import se.hernebring.search.service.TfIdfCalculator;
+import se.hernebring.search.service.TfIdfEngine;
+import se.hernebring.search.service.UserPrompter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,11 @@ public class SearchController {
       .prompt("Type word and hit enter to search (empty to quit)");
     if(query.isEmpty())
       throw new ShutdownRequestedException("Empty search: Quit requested");
-    return new ArrayList<>(engine.search(query).values());
+    try {
+      return engine.search(query);
+    } catch (IllegalQueryException ex) {
+      return new ArrayList<>(List.of(ex.getMessage()));
+    }
+
   }
 }
